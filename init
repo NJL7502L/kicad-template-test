@@ -1,0 +1,30 @@
+#!/bin/zsh
+
+git co master
+
+echo "Start initialization..."
+
+DEFAULT_NAME="Untitled"
+CURRENT=$(cd $(dirname $0);pwd)
+DIR_NAME=`echo "$CURRENT" | sed -e 's/.*\/\([^\/]*\)$/\1/'`
+
+EXTENSIONS=(".pro" ".sch" ".kicad_pcb")
+
+for EXTENSION in ${EXTENSIONS[@]}
+do
+  ORIGIN="$DEFAULT_NAME$EXTENSION"
+  UPDATE="$DIR_NAME$EXTENSION"
+  echo ORIGIN: $ORIGIN
+  echo UPDATE: $UPDATE
+  git mv "$ORIGIN" "$UPDATE"
+done
+git add .
+git commit -m 'zsh init: rename files'
+
+git submodule add -f  git@github.com:NJL7502L/kicad.git
+git add .
+git commit -m 'zsh init: add submodule kicad'
+
+git push origin master
+
+echo "DONE!!"
